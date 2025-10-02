@@ -152,7 +152,7 @@
         border: none;
         color: white;
         cursor: pointer;
-        font-size: 20px;
+        font-size: 35px;
       }
       .menu {
         position: fixed;
@@ -294,6 +294,13 @@
       <h2>Obra 3: Flujos</h2>
       <p>Serie de visualizaciones generativas basadas en datos...</p>
     </div>
+    <div id="obra4" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('obra4')">
+        &times;
+      </button>
+      <h2>Obra 4: Flujos</h2>
+      <p>Serie de visualizaciones generativas basadas en datos...</p>
+    </div>
 
     <script>
       let nodes = [];
@@ -309,7 +316,7 @@
       const TRANSITION_SPEED = 0.08;
 
       function getInitialNodesCount() {
-        return windowWidth < 768 ? 6 : 12;
+        return windowWidth < 768 ? 6 : 15;
       }
 
       function setup() {
@@ -340,7 +347,7 @@
         // Definir los nodos de información (inicialmente ocultos)
         const infoItems = [
           { nombre: "Contacto", link: "#contact" },
-          { nombre: "Biografía", link: "#bio" },
+          { nombre: "Biografía", link: "#history" },
         ];
 
         infoItems.forEach((item, i) => {
@@ -593,6 +600,8 @@
       }
 
       function mousePressed() {
+        let clickedOnNode = false;
+
         // Verificar si se hizo clic en alguno de los nodos principales
         for (let node of mainNodes) {
           if (dist(mouseX, mouseY, node.x, node.y) < node.size / 2) {
@@ -603,7 +612,8 @@
               showInfoNodes = !showInfoNodes;
               showContentNodes = false;
             }
-            return;
+            clickedOnNode = true;
+            break;
           }
         }
 
@@ -614,8 +624,9 @@
               if (node.link) {
                 showSection(node.link.substring(1));
                 showContentNodes = false;
+                clickedOnNode = true;
+                break;
               }
-              return;
             }
           }
         }
@@ -627,21 +638,47 @@
               if (node.link) {
                 showSection(node.link.substring(1));
                 showInfoNodes = false;
+                clickedOnNode = true;
+                break;
               }
-              return;
             }
           }
         }
 
-        // Si se hace clic fuera de cualquier nodo, ocultar todos los nodos secundarios
-        if (
-          !event.target.closest(".nav-links") &&
-          !event.target.closest(".portfolio-section")
-        ) {
+        // Si no se hizo clic en ningún nodo, solo cerrar los nodos secundarios
+        if (!clickedOnNode) {
           showContentNodes = false;
           showInfoNodes = false;
         }
       }
+
+      // Manejar clics fuera de los elementos interactivos
+      document.addEventListener("click", function (e) {
+        const navLinks = document.querySelector(".nav-links");
+        const isMenuOpen = navLinks && navLinks.classList.contains("active");
+
+        // Si el clic es en un enlace, botón de menú, botón de cierre, o sobre el canvas (nodos), no hacer nada
+        if (
+          e.target.closest("a") ||
+          e.target.closest(".nav-links button") ||
+          e.target.closest(".close-button") ||
+          e.target.closest(".close-nav") ||
+          e.target.closest(".hamburger") ||
+          e.target.closest(".portfolio-section") ||
+          e.target.tagName === "CANVAS"
+        ) {
+          return;
+        }
+
+        // Cerrar solo el menú hamburguesa si está abierto (necesario para responsive)
+        if (isMenuOpen) {
+          navLinks.classList.remove("active");
+        }
+
+        // Ocultar nodos secundarios al hacer clic fuera
+        showContentNodes = false;
+        showInfoNodes = false;
+      });
 
       // Funciones para manejar las secciones del portfolio
       function showSection(sectionId) {
@@ -649,10 +686,12 @@
         document.querySelectorAll(".portfolio-section").forEach((section) => {
           section.style.display = "none";
         });
-        // Mostrar la sección seleccionada después de un pequeño retraso
-        setTimeout(() => {
-          document.getElementById(sectionId).style.display = "block";
-        }, 100);
+
+        // Mostrar la sección seleccionada inmediatamente
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.style.display = "block";
+        }
       }
 
       function hideSection(sectionId) {
@@ -669,12 +708,12 @@
           showContentNodes = true;
           setTimeout(() => {
             showContentNodes = false;
-          }, 800);
+          }, 4000);
         } else if (wasInfoNode) {
           showInfoNodes = true;
           setTimeout(() => {
             showInfoNodes = false;
-          }, 800);
+          }, 4000);
         }
       }
     </script>

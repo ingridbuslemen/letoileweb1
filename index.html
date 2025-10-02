@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patrones Universales</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        font-family: Arial, sans-serif;
+      }
+      canvas {
+        display: block;
+        position: fixed;
+        z-index: 1;
+      }
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        background: transparent;
+      }
+      .brand {
+        color: white;
+        font-size: 1.5em;
+        font-family: "Times New Roman", serif;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+      }
+      .hamburger {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+      .hamburger:hover {
+        transform: scale(1.1);
+      }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        z-index: 999;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-links button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+        letter-spacing: 2px;
+      }
+      .nav-links button:hover {
+        color: #88f;
+        text-shadow: 0 0 5px rgba(136, 136, 255, 0.5);
+        transform: scale(1.1);
+      }
+      .welcome-text {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        text-align: center;
+        font-size: 1rem;
+        opacity: 0.7;
+        z-index: 2;
+        pointer-events: none;
+        animation: fadeInOut 5s infinite;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      @keyframes fadeInOut {
+        0%,
+        100% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      .portfolio-section {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 2;
+        display: none;
+        max-width: 80%;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .close-button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 20px;
+      }
+      .menu {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 2;
+        display: flex;
+        gap: 10px;
+      }
+      .menu-button {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: 1px solid white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .menu-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="#" class="brand">L'etoile</a>
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+      <div class="nav-links">
+        <button onclick="showSection('history'); toggleMenu()">
+          Biografía
+        </button>
+        <button onclick="showSection('links'); toggleMenu()">Obras</button>
+        <button onclick="showSection('contact'); toggleMenu()">Contacto</button>
+      </div>
+    </nav>
+
+    <div class="welcome-text">
+      Conocé sobre Letoile haciendo clic en los circulos
+    </div>
+
+    <div id="history" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('history')">
+        &times;
+      </button>
+      <h2>Mi Historia</h2>
+      <p>
+        ¡Hola! Soy un artista digital y desarrollador creativo. Mi trabajo se
+        centra en la intersección entre el arte y la tecnología, creando
+        experiencias interactivas y visuales únicas.
+      </p>
+      <p>
+        A través de mi trabajo, exploro patrones, conexiones y la belleza de la
+        matemática en el arte digital.
+      </p>
+    </div>
+
+    <div id="links" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('links')">
+        &times;
+      </button>
+      <h2>Links</h2>
+      <ul>
+        <li>
+          <a
+            href="https://github.com/tuusuario"
+            target="_blank"
+            style="color: #88f"
+            >Obra 1</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://linkedin.com/in/tuusuario"
+            target="_blank"
+            style="color: #88f"
+            >Obra 2</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://instagram.com/tuusuario"
+            target="_blank"
+            style="color: #88f"
+            >Obra 3</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div id="contact" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('contact')">
+        &times;
+      </button>
+      <h2>Contacto</h2>
+      <p>Email: tu@email.com</p>
+      <p>LinkedIn: linkedin.com/in/tuusuario</p>
+      <p>
+        ¡No dudes en contactarme para colaboraciones o proyectos interesantes!
+      </p>
+    </div>
+
+    <div id="bio" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('bio')">&times;</button>
+      <h2>Biografía</h2>
+      <p>
+        Soy un artista visual especializado en la creación de experiencias
+        interactivas. Mi trabajo explora la intersección entre el arte digital y
+        la participación del espectador, creando espacios donde la tecnología se
+        convierte en un medio para la expresión artística.
+      </p>
+      <p>
+        Con formación en artes visuales y programación, mis obras buscan generar
+        un diálogo entre lo analógico y lo digital, invitando al espectador a
+        ser parte activa de la experiencia artística.
+      </p>
+    </div>
+
+    <div id="obra1" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('obra1')">
+        &times;
+      </button>
+      <h2>Obra 1: Constelaciones Digitales</h2>
+      <p>Una exploración interactiva de patrones y conexiones...</p>
+    </div>
+
+    <div id="obra2" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('obra2')">
+        &times;
+      </button>
+      <h2>Obra 2: Resonancias</h2>
+      <p>Instalación que responde al movimiento del espectador...</p>
+    </div>
+
+    <div id="obra3" class="portfolio-section">
+      <button class="close-button" onclick="hideSection('obra3')">
+        &times;
+      </button>
+      <h2>Obra 3: Flujos</h2>
+      <p>Serie de visualizaciones generativas basadas en datos...</p>
+    </div>
+
+    <script>
+      let nodes = [];
+      let time = 0;
+      let mainNodes = [];
+      let contentNodes = [];
+      let infoNodes = [];
+      let showContentNodes = false;
+      let showInfoNodes = false;
+      const MAIN_NODE_SIZE = 80;
+      const CONTENT_NODE_SIZE = 70;
+      let welcomeTextVisible = true;
+      const TRANSITION_SPEED = 0.08;
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+
+        // Crear los dos nodos principales (violeta y amarillo)
+        mainNodes = [
+          {
+            x: windowWidth * 0.35,
+            y: windowHeight * 0.5,
+            vx: 0.2,
+            vy: 0.15,
+            color: "violet",
+            label: "OBRAS",
+            size: MAIN_NODE_SIZE,
+          },
+          {
+            x: windowWidth * 0.65,
+            y: windowHeight * 0.5,
+            vx: -0.2,
+            vy: -0.15,
+            color: "yellow",
+            label: "INFO",
+            size: MAIN_NODE_SIZE,
+          },
+        ];
+
+        // Definir los nodos de información (inicialmente ocultos)
+        const infoItems = [
+          { nombre: "Contacto", link: "#contact" },
+          { nombre: "Biografía", link: "#bio" },
+        ];
+
+        infoItems.forEach((item, i) => {
+          const angle = (i * TWO_PI) / infoItems.length + PI / 4; // Ajuste del ángulo inicial
+          const radius = 150;
+          infoNodes.push({
+            x: windowWidth * 0.65 + cos(angle) * radius,
+            y: windowHeight * 0.5 + sin(angle) * radius,
+            targetX: windowWidth * 0.65 + cos(angle) * radius,
+            targetY: windowHeight * 0.5 + sin(angle) * radius,
+            vx: random(-0.1, 0.1),
+            vy: random(-0.1, 0.1),
+            color: "white",
+            size: CONTENT_NODE_SIZE,
+            label: item.nombre,
+            link: item.link,
+            opacity: 0,
+          });
+        });
+
+        // Crear nodos decorativos
+        const numInitialNodes = 12; // Aumentado a 12 nodos
+        for (let i = 0; i < numInitialNodes; i++) {
+          nodes.push({
+            x: random(100, windowWidth - 100),
+            y: random(100, windowHeight - 100),
+            vx: random(-0.2, 0.2),
+            vy: random(-0.2, 0.2),
+            color: "white",
+            size: 40,
+            opacity: 255,
+          });
+        }
+
+        // Definir los nodos de contenido (inicialmente ocultos)
+        const obras = [
+          { nombre: "Obra 1", link: "#obra1" },
+          { nombre: "Obra 2", link: "#obra2" },
+          { nombre: "Obra 3", link: "#obra3" },
+          { nombre: "Obra 4", link: "#obra4" },
+        ];
+
+        obras.forEach((obra, i) => {
+          const angle = (i * TWO_PI) / obras.length;
+          const radius = 150;
+          contentNodes.push({
+            x: windowWidth / 2 + cos(angle) * radius,
+            y: windowHeight / 2 + sin(angle) * radius,
+            targetX: windowWidth / 2 + cos(angle) * radius,
+            targetY: windowHeight / 2 + sin(angle) * radius,
+            vx: random(-0.1, 0.1), // Pequeño movimiento
+            vy: random(-0.1, 0.1), // Pequeño movimiento
+            color: "white",
+            size: CONTENT_NODE_SIZE,
+            label: obra.nombre,
+            link: obra.link,
+            opacity: 0,
+          });
+        });
+      }
+
+      // Función para toggle del menú hamburguesa
+      function toggleMenu() {
+        const navLinks = document.querySelector(".nav-links");
+        navLinks.classList.toggle("active");
+      }
+
+      function draw() {
+        background(0, 80);
+        time += 0.01;
+
+        // Preparar array con todos los nodos visibles
+        let allNodes = [...nodes, ...mainNodes];
+        if (showContentNodes) {
+          allNodes = [...allNodes, ...contentNodes];
+        }
+        if (showInfoNodes) {
+          allNodes = [...allNodes, ...infoNodes];
+        }
+
+        // Conexiones minimalistas entre todos los nodos
+        strokeWeight(0.5);
+        for (let i = 0; i < allNodes.length; i++) {
+          for (let j = i + 1; j < allNodes.length; j++) {
+            let node1 = allNodes[i];
+            let node2 = allNodes[j];
+            let d = dist(node1.x, node1.y, node2.x, node2.y);
+            if (d < 300) {
+              let alpha = map(d, 0, 300, 50, 0); // Aumentado el valor mínimo de alpha
+
+              // Ajustar alpha basado en la opacidad de los nodos
+              let finalAlpha =
+                alpha * (node1.opacity / 255) * (node2.opacity / 255);
+
+              stroke(255, finalAlpha);
+              line(node1.x, node1.y, node2.x, node2.y);
+            }
+          }
+        }
+
+        // Dibujar nodos decorativos
+        for (let node of nodes) {
+          node.x += node.vx;
+          node.y += node.vy;
+
+          if (node.x < 50 || node.x > width - 50) node.vx *= -1;
+          if (node.y < 50 || node.y > height - 50) node.vy *= -1;
+
+          noFill();
+          strokeWeight(1);
+          stroke(255, 200);
+          ellipse(node.x, node.y, node.size, node.size);
+        }
+
+        // Función auxiliar para dibujar nodos secundarios
+        function drawSecondaryNodes(nodes, isVisible) {
+          for (let node of nodes) {
+            // Animar solo la aparición/desaparición
+            node.opacity = lerp(
+              node.opacity,
+              isVisible ? 255 : 0,
+              TRANSITION_SPEED
+            );
+
+            noFill();
+            let isHovered =
+              dist(mouseX, mouseY, node.x, node.y) < node.size / 2;
+
+            if (isHovered) {
+              strokeWeight(2);
+              stroke(255, node.opacity);
+            } else {
+              strokeWeight(1);
+              stroke(255, node.opacity * 0.8);
+            }
+
+            // Dibujar círculo con efecto de pulsación
+            let pulseEffect = sin(time * 2) * 3;
+            ellipse(
+              node.x,
+              node.y,
+              node.size + pulseEffect,
+              node.size + pulseEffect
+            );
+
+            // Texto del nodo
+            noStroke();
+            fill(255, isHovered ? node.opacity : node.opacity * 0.8);
+            textAlign(CENTER, CENTER);
+            textSize(14);
+            text(node.label, node.x, node.y);
+          }
+        }
+
+        // Dibujar nodos de contenido si están visibles
+        if (showContentNodes) {
+          drawSecondaryNodes(contentNodes, showContentNodes);
+        }
+
+        // Dibujar nodos de información si están visibles
+        if (showInfoNodes) {
+          drawSecondaryNodes(infoNodes, showInfoNodes);
+        }
+
+        // Dibujar nodos principales
+        for (let node of mainNodes) {
+          node.x += node.vx;
+          node.y += node.vy;
+
+          // Rebote en los bordes con más margen para los nodos grandes
+          if (node.x < node.size || node.x > width - node.size) node.vx *= -1;
+          if (node.y < node.size || node.y > height - node.size) node.vy *= -1;
+
+          // Círculo y etiqueta
+          noFill();
+          strokeWeight(2);
+
+          if (node.color === "violet") {
+            stroke(138, 92, 246, 200);
+          } else if (node.color === "yellow") {
+            stroke(252, 211, 77, 200);
+          }
+
+          // Efecto de hover y pulsación
+          let currentSize = node.size;
+          let pulseEffect = sin(time * 2) * 5; // Efecto de pulsación
+
+          if (dist(mouseX, mouseY, node.x, node.y) < node.size / 2) {
+            strokeWeight(3);
+            if (node.color === "violet") {
+              stroke(138, 92, 246, 255);
+            } else if (node.color === "yellow") {
+              stroke(252, 211, 77, 255);
+            }
+            currentSize = node.size + 10;
+            // Ocultar el texto de bienvenida cuando el mouse está sobre un nodo
+            welcomeTextVisible = false;
+          }
+
+          // Dibujar círculo exterior con efecto de pulsación
+          ellipse(
+            node.x,
+            node.y,
+            currentSize + pulseEffect,
+            currentSize + pulseEffect
+          );
+
+          // Dibujar círculo interior
+          ellipse(
+            node.x,
+            node.y,
+            currentSize * 0.7 + pulseEffect / 2,
+            currentSize * 0.7 + pulseEffect / 2
+          );
+
+          // Texto
+          noStroke();
+          fill(255);
+          textAlign(CENTER, CENTER);
+          textSize(16);
+          text(node.label, node.x, node.y);
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+
+      function mousePressed() {
+        // Verificar si se hizo clic en alguno de los nodos principales
+        for (let node of mainNodes) {
+          if (dist(mouseX, mouseY, node.x, node.y) < node.size / 2) {
+            if (node.label === "OBRAS") {
+              showContentNodes = !showContentNodes;
+              showInfoNodes = false;
+            } else if (node.label === "INFO") {
+              showInfoNodes = !showInfoNodes;
+              showContentNodes = false;
+            }
+            return;
+          }
+        }
+
+        // Verificar si se hizo clic en alguno de los nodos de contenido
+        if (showContentNodes) {
+          for (let node of contentNodes) {
+            if (dist(mouseX, mouseY, node.x, node.y) < node.size / 2) {
+              if (node.link) {
+                showSection(node.link.substring(1));
+                showContentNodes = false;
+              }
+              return;
+            }
+          }
+        }
+
+        // Verificar si se hizo clic en alguno de los nodos de información
+        if (showInfoNodes) {
+          for (let node of infoNodes) {
+            if (dist(mouseX, mouseY, node.x, node.y) < node.size / 2) {
+              if (node.link) {
+                showSection(node.link.substring(1));
+                showInfoNodes = false;
+              }
+              return;
+            }
+          }
+        }
+
+        // Si se hace clic fuera de cualquier nodo, ocultar todos los nodos secundarios
+        if (
+          !event.target.closest(".nav-links") &&
+          !event.target.closest(".portfolio-section")
+        ) {
+          showContentNodes = false;
+          showInfoNodes = false;
+        }
+      }
+
+      // Funciones para manejar las secciones del portfolio
+      function showSection(sectionId) {
+        // Ocultar todas las secciones primero
+        document.querySelectorAll(".portfolio-section").forEach((section) => {
+          section.style.display = "none";
+        });
+        // Mostrar la sección seleccionada después de un pequeño retraso
+        setTimeout(() => {
+          document.getElementById(sectionId).style.display = "block";
+        }, 100);
+      }
+
+      function hideSection(sectionId) {
+        const wasContentNode = contentNodes.some(
+          (node) => node.link === "#" + sectionId
+        );
+        const wasInfoNode = infoNodes.some(
+          (node) => node.link === "#" + sectionId
+        );
+
+        document.getElementById(sectionId).style.display = "none";
+
+        if (wasContentNode) {
+          showContentNodes = true;
+          setTimeout(() => {
+            showContentNodes = false;
+          }, 800);
+        } else if (wasInfoNode) {
+          showInfoNodes = true;
+          setTimeout(() => {
+            showInfoNodes = false;
+          }, 800);
+        }
+      }
+    </script>
+  </body>
+</html>

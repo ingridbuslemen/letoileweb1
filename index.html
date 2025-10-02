@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Patrones Universales</title>
+    <title>L'etoile</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
       body {
@@ -68,6 +68,21 @@
       .nav-links.active {
         display: flex;
       }
+      .nav-links .close-nav {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        padding: 10px;
+        transition: transform 0.3s ease;
+      }
+      .nav-links .close-nav:hover {
+        transform: scale(1.1);
+      }
       .nav-links button {
         background: none;
         border: none;
@@ -79,10 +94,18 @@
         letter-spacing: 2px;
       }
       .nav-links button:hover {
-        color: #88f;
-        text-shadow: 0 0 5px rgba(136, 136, 255, 0.5);
         transform: scale(1.1);
       }
+      .nav-links button:nth-child(2):hover {
+        color: rgb(138, 92, 246); /* Violeta */
+      }
+      .nav-links button:nth-child(3):hover {
+        color: rgb(252, 211, 77); /* Amarillo */
+      }
+      .nav-links button:nth-child(4):hover {
+        color: rgb(176, 175, 175);
+      }
+
       .welcome-text {
         position: fixed;
         bottom: 2rem;
@@ -158,6 +181,7 @@
       <a href="#" class="brand">L'etoile</a>
       <button class="hamburger" onclick="toggleMenu()">☰</button>
       <div class="nav-links">
+        <button class="close-nav" onclick="toggleMenu()">x</button>
         <button onclick="showSection('history'); toggleMenu()">
           Biografía
         </button>
@@ -167,7 +191,7 @@
     </nav>
 
     <div class="welcome-text">
-      Conocé sobre Letoile haciendo clic en los circulos
+      Conocé sobre Letoile presionando los circulos
     </div>
 
     <div id="history" class="portfolio-section">
@@ -283,7 +307,7 @@
       const CONTENT_NODE_SIZE = 70;
       let welcomeTextVisible = true;
       const TRANSITION_SPEED = 0.08;
-      
+
       function getInitialNodesCount() {
         return windowWidth < 768 ? 6 : 12;
       }
@@ -544,7 +568,7 @@
 
       function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
-        
+
         // Ajustar la cantidad de nodos según el tamaño de la pantalla
         const desiredCount = getInitialNodesCount();
         if (desiredCount < nodes.length) {

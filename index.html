@@ -283,6 +283,10 @@
       const CONTENT_NODE_SIZE = 70;
       let welcomeTextVisible = true;
       const TRANSITION_SPEED = 0.08;
+      
+      function getInitialNodesCount() {
+        return windowWidth < 768 ? 6 : 12;
+      }
 
       function setup() {
         createCanvas(windowWidth, windowHeight);
@@ -334,15 +338,16 @@
         });
 
         // Crear nodos decorativos
-        const numInitialNodes = 12; // Aumentado a 12 nodos
+        const numInitialNodes = getInitialNodesCount();
+        const margin = windowWidth < 768 ? 50 : 100;
         for (let i = 0; i < numInitialNodes; i++) {
           nodes.push({
-            x: random(100, windowWidth - 100),
-            y: random(100, windowHeight - 100),
+            x: random(margin, windowWidth - margin),
+            y: random(margin, windowHeight - margin),
             vx: random(-0.2, 0.2),
             vy: random(-0.2, 0.2),
             color: "white",
-            size: 40,
+            size: windowWidth < 768 ? 30 : 40,
             opacity: 255,
           });
         }
@@ -539,6 +544,28 @@
 
       function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
+        
+        // Ajustar la cantidad de nodos según el tamaño de la pantalla
+        const desiredCount = getInitialNodesCount();
+        if (desiredCount < nodes.length) {
+          // Eliminar nodos si hay demasiados
+          nodes.splice(desiredCount);
+        } else if (desiredCount > nodes.length) {
+          // Agregar nodos si faltan
+          const margin = windowWidth < 768 ? 50 : 100;
+          const nodeSize = windowWidth < 768 ? 30 : 40;
+          while (nodes.length < desiredCount) {
+            nodes.push({
+              x: random(margin, windowWidth - margin),
+              y: random(margin, windowHeight - margin),
+              vx: random(-0.2, 0.2),
+              vy: random(-0.2, 0.2),
+              color: "white",
+              size: nodeSize,
+              opacity: 255,
+            });
+          }
+        }
       }
 
       function mousePressed() {
